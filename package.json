@@ -5,7 +5,7 @@
   "description": "Ping monitor and power control for VPS and PCs",
   "author": "VPS Monitor",
   "type": "module",
-  "private": true,
+  "license": "MIT",
   "main": "electron/main.mjs",
   "engines": {
     "node": ">=20"

@@ -1,0 +1,176 @@
+/* Traders, the tap menu, the properties drawer and the dark theme. Loaded after theme.css. */
+
+/* Market stalls: every machine is a trader at a stall */
+.tile { position: relative; overflow: hidden; padding: 12px 2px 5px; min-height: 92px; }
+.tile::before {
+  content: ""; position: absolute; inset: 0 0 auto; height: 9px;
+  background: repeating-linear-gradient(90deg, var(--awning) 0 8px, #fff 8px 16px);
+  border-bottom: 1px solid rgb(0 0 0 / .14);
+}
+.tile.online { --awning: #2fbf71; }
+.tile.offline { --awning: #e5484d; }
+.tile.unknown { --awning: #98a2af; }
+.tile.pending { --awning: #e8a317; }
+.tile.add::before { display: none; }
+.stage { position: relative; display: block; width: 100%; height: 44px; font-style: normal; }
+.tile .npc, .machine-icon .npc {
+  position: absolute; left: 50%; bottom: 0; width: 26px; height: 39px; margin-left: -13px; image-rendering: pixelated;
+}
+.tile .npc { animation: wander var(--walk, 11s) linear var(--delay, 0s) infinite; }
+.tile .leg-a { animation: step-a .5s steps(2) infinite; }
+.tile .leg-b { animation: step-b .5s steps(2) infinite; }
+.npc .head { transform-box: fill-box; transform-origin: bottom; }
+.tile .npc .head { animation: nod 4.3s steps(3) var(--delay, 0s) infinite; }
+.tile .eye { animation: look 3.1s steps(1) var(--delay, 0s) infinite; }
+.tile .bed, .machine-icon .bed {
+  position: absolute; left: 50%; bottom: 2px; width: 45px; height: 30px; margin-left: -22.5px; image-rendering: pixelated;
+}
+.tile.pending .npc { animation: hop .55s ease-in-out infinite; }
+.sleeper { animation: breath 2.6s ease-in-out infinite; }
+.zzz {
+  position: absolute; left: 26%; top: 10px; color: #4f7fd1; font: 700 11px Consolas, monospace; opacity: 0;
+  animation: zzz 3s ease-out infinite;
+}
+.zzz:nth-of-type(2) { animation-delay: 1s; }
+.zzz:nth-of-type(3) { animation-delay: 2s; }
+.bubble {
+  position: absolute; right: 8%; top: 0; padding: 0 5px; background: #fff; color: #4f5a67; border: 1px solid #cdd3da;
+  border-radius: 7px; font-size: 11px; animation: float 1.6s ease-in-out infinite;
+}
+.machine-icon { position: relative; overflow: hidden; }
+.machine-icon .stage { height: 100%; }
+.machine-icon .npc { bottom: 6px; }
+@keyframes wander {
+  0%, 8% { transform: translateX(-11px) scaleX(1); }
+  42%, 50% { transform: translateX(11px) scaleX(1); }
+  50.01%, 58% { transform: translateX(11px) scaleX(-1); }
+  92%, 100% { transform: translateX(-11px) scaleX(-1); }
+}
+@keyframes step-a { 50% { transform: translateY(-1.2px); } }
+@keyframes step-b { 0% { transform: translateY(-1.2px); } 50% { transform: none; } }
+@keyframes nod { 0%, 70%, 100% { transform: none; } 80% { transform: translateY(.8px); } 90% { transform: translateY(-.4px); } }
+@keyframes look { 0%, 60%, 100% { transform: none; } 61%, 80% { transform: translateX(-1px); } }
+@keyframes hop { 50% { transform: translateY(-7px); } }
+@keyframes breath { 50% { transform: translateY(.6px); } }
+@keyframes zzz {
+  0% { opacity: 0; transform: translate(0, 8px) scale(.7); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: translate(16px, -12px) scale(1.25); }
+}
+
+/* Village ground */
+.room { background: repeating-conic-gradient(#e6f4d8 0 25%, #deefcd 0 50%) 0 0 / 36px 36px; }
+.room::before { border-color: #b9a27a; }
+.door::before { background: #e6f4d8; border-color: #b9a27a; }
+.rack, .bay-rack { background: #efe5d0; border-color: #d9c8a6; }
+.bay-rack { border-color: #b9a27a; }
+.shelf { border-bottom-color: #d9c8a6; }
+.aisle { background: #f1e8d6; border-color: #dccfb4; color: #a08a66; }
+
+/* Tap menu */
+.tile-menu {
+  position: fixed; z-index: 30; width: 204px; padding: 6px; background: var(--panel); color: var(--text);
+  border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 14px 34px rgb(22 32 44 / .22);
+}
+.tile-menu.enter { animation: menu-in .14s ease-out; transform-origin: top left; }
+@keyframes menu-in { from { opacity: 0; transform: scale(.92); } }
+.menu-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 5px 8px 7px; }
+.menu-head strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.menu-head .badge { flex: none; font-size: 11px; padding: 1px 8px; }
+.menu-item {
+  display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; background: none; border: 0;
+  border-radius: 9px; color: var(--text); font-weight: 600; text-align: left; transition: background .12s;
+}
+.menu-item svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.menu-item:hover:not(:disabled), .menu-item:focus-visible { background: var(--panel-2); outline: none; }
+.menu-item.go { color: #0a7a3a; }
+.menu-item.danger { color: #c9282d; }
+.menu-item.warn { color: #96610a; }
+.menu-item:disabled { color: var(--muted); opacity: .5; }
+.tile-menu hr { margin: 5px 4px; border: 0; border-top: 1px solid var(--line); }
+
+/* Properties drawer floats over the page; the plan never moves */
+.detail, .detail[class] {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 20; width: min(360px, 100vw); padding: 14px; overflow-y: auto;
+  background: var(--bg); border-left: 1px solid var(--line); box-shadow: -14px 0 34px rgb(22 32 44 / .16);
+}
+.detail.enter { animation: drawer .22s ease-out; }
+@keyframes drawer { from { transform: translateX(100%); } }
+
+.theme-toggle {
+  display: inline-flex; align-items: center; gap: 8px; margin-left: auto; padding: 5px 12px; border: 1px solid var(--line);
+  border-radius: 999px; background: var(--panel); color: var(--text); font-weight: 600; font-size: 13px;
+}
+.theme-toggle em { font-style: normal; }
+.theme-toggle i { width: 14px; height: 14px; border-radius: 50%; background: #e8a317; box-shadow: 0 0 0 3px rgb(232 163 23 / .2); }
+.connection + .theme-toggle { margin-left: 12px; }
+
+/* Dark theme */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #16181c;
+  --panel: #26292f;
+  --panel-2: #33363d;
+  --line: #3a3e46;
+  --text: #edeff2;
+  --muted: #a7afb9;
+  --accent-soft: #143826;
+  --room: #1e2520;
+  --wall: #4b4436;
+  --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 4px 14px rgb(0 0 0 / .25);
+}
+[data-theme="dark"] .t-online { color: #5fe39a !important; }
+[data-theme="dark"] .t-offline { color: #ff8f8f !important; }
+[data-theme="dark"] :focus-visible { outline-color: #5fe39a; }
+[data-theme="dark"] .connection { background: #4c1d1f; color: #ffb4b4; }
+[data-theme="dark"] .nav-item:hover { background: var(--panel); }
+[data-theme="dark"] .nav-item.active { color: #5fe39a; }
+[data-theme="dark"] .main { background: #1b1d22; }
+[data-theme="dark"] .demo-note { background: #38300f; border-color: #6a5a1b; color: #f1d774; }
+[data-theme="dark"] th { background: #2d3037; }
+[data-theme="dark"] .zone-bar .track { background: var(--panel-2); }
+[data-theme="dark"] .mini-log .bad, [data-theme="dark"] .error { color: #ff8f8f; }
+[data-theme="dark"] .btn { background: var(--panel-2); color: var(--text); }
+[data-theme="dark"] .btn:hover:not(:disabled) { filter: brightness(1.14); }
+[data-theme="dark"] .btn.primary, [data-theme="dark"] .btn.go { background: var(--accent); color: var(--accent-ink); }
+[data-theme="dark"] .btn.danger { background: #4c1d1f; color: #ffb4b4; }
+[data-theme="dark"] .btn.warn { background: #48370f; color: #f5cd6a; }
+[data-theme="dark"] .tabs { background: var(--panel-2); }
+[data-theme="dark"] .tabs button.active { background: var(--panel); }
+[data-theme="dark"] input, [data-theme="dark"] select, [data-theme="dark"] textarea { background: #1b1d22; border-color: var(--line); }
+[data-theme="dark"] .chip { background: var(--panel); }
+[data-theme="dark"] .chip:hover { color: #5fe39a; }
+[data-theme="dark"] .room { background: repeating-conic-gradient(#232c25 0 25%, #1f2721 0 50%) 0 0 / 36px 36px; }
+[data-theme="dark"] .room::before { border-color: var(--wall); }
+[data-theme="dark"] .door::before { background: #232c25; border-color: var(--wall); }
+[data-theme="dark"] .rack, [data-theme="dark"] .bay-rack { background: #2e2a23; border-color: #4b4436; }
+[data-theme="dark"] .shelf { border-bottom-color: #4b4436; }
+[data-theme="dark"] .aisle { background: #29251f; border-color: #4b4436; color: #9d8e74; }
+[data-theme="dark"] .zone-label, [data-theme="dark"] .floors span, [data-theme="dark"] .door span { background: var(--panel); color: var(--text); }
+[data-theme="dark"] .tile { background: var(--panel); }
+[data-theme="dark"] .tile.online { background: #17372a; border-color: #24583f; color: #c6f3da; }
+[data-theme="dark"] .tile.offline { background: #41201f; border-color: #6d3230; color: #ffcfcf; }
+[data-theme="dark"] .tile.unknown { background: #30343b; border-color: #464b54; color: #d0d5dc; }
+[data-theme="dark"] .tile.pending { background: #43361a; border-color: #6e5720; color: #fbe2a3; }
+[data-theme="dark"] .tile.add { background: transparent; border-color: #4a4f58; color: #7c8591; }
+[data-theme="dark"] .tile.add:hover { background: var(--accent-soft); border-color: #2fbf71; color: #5fe39a; }
+[data-theme="dark"] .tile::before { background: repeating-linear-gradient(90deg, var(--awning) 0 8px, #e7e9ec 8px 16px); }
+[data-theme="dark"] .zzz { color: #9dbcf5; }
+[data-theme="dark"] .bubble { background: var(--panel-2); color: var(--text); border-color: var(--line); }
+[data-theme="dark"] .machine-icon { background: var(--panel-2); }
+[data-theme="dark"] .machine-icon.online { background: #17372a; }
+[data-theme="dark"] .machine-icon.offline { background: #41201f; }
+[data-theme="dark"] .machine-icon.pending { background: #43361a; }
+[data-theme="dark"] .badge { background: var(--panel-2); color: var(--text); }
+[data-theme="dark"] .badge.online { background: #17372a; color: #7ce9ae; }
+[data-theme="dark"] .badge.offline { background: #41201f; color: #ffb4b4; }
+[data-theme="dark"] .badge.pending { background: #43361a; color: #f5cd6a; }
+[data-theme="dark"] .icon-btn:hover { background: var(--panel-2); }
+[data-theme="dark"] .menu-item.go { color: #5fe39a; }
+[data-theme="dark"] .menu-item.danger { color: #ff8f8f; }
+[data-theme="dark"] .menu-item.warn { color: #f5cd6a; }
+[data-theme="dark"] .tile-menu, [data-theme="dark"] .detail, [data-theme="dark"] .toast { box-shadow: 0 14px 34px rgb(0 0 0 / .5); }
+[data-theme="dark"] dialog { background: var(--panel); }
+[data-theme="dark"] .toast, [data-theme="dark"] .toast.bad { background: var(--panel); color: var(--text); }
+[data-theme="dark"] .toast b { color: #5fe39a; }
+[data-theme="dark"] .toast.bad b { color: #ff8f8f; }

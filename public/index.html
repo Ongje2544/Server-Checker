@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Server Monitor</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="village.css">
+  <link rel="stylesheet" href="fonts.css">
+  <script>
+    let savedTheme = null;
+    try { savedTheme = localStorage.getItem('theme'); } catch {}
+    document.documentElement.dataset.theme = savedTheme === 'dark' ? 'dark' : 'light';
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <span class="brand-icon" data-ic="pickaxe"></span>
+    <div>
+      <strong>SERVER MONITOR</strong>
+      <span>Infrastructure &amp; Availability</span>
+    </div>
+    <div id="connection" class="connection" hidden>ขาดการเชื่อมต่อกับเซิร์ฟเวอร์ สถานะที่เห็นอาจไม่เป็นปัจจุบัน</div>
+    <button id="theme-toggle" class="theme-toggle" type="button"><span id="theme-icon"></span><em id="theme-label">โหมดมืด</em></button>
+  </header>
+
+  <div class="shell">
+    <nav class="sidebar" id="nav" aria-label="เมนูหลัก"></nav>
+    <main class="main">
+      <section class="page-head">
+        <div class="page-title">
+          <span id="page-icon" class="page-icon"></span>
+          <div><h1 id="page-title"></h1><p id="page-sub"></p></div>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><span class="kpi-ic online" data-ic="wifi"></span><div><b class="t-online">ONLINE</b><strong id="k-online">-</strong><small>เครื่อง</small></div></div>
+          <div class="kpi"><span class="kpi-ic offline" data-ic="wifi-off"></span><div><b class="t-offline">OFFLINE</b><strong id="k-offline">-</strong><small>เครื่อง</small></div></div>
+          <div class="kpi"><span class="kpi-ic" data-ic="server"></span><div><b>TOTAL</b><strong id="k-total">-</strong><small>เครื่อง</small></div></div>
+        </div>
+        <div class="updated"><span>อัปเดตล่าสุด</span><strong id="updated">-</strong></div>
+      </section>
+      <div class="xp" title="เวลาถึงรอบ ping ถัดไป"><i id="xp-fill"></i></div>
+      <div id="demo-note" class="demo-note" hidden></div>
+      <div class="workspace">
+        <div id="view" class="view"></div>
+        <aside id="detail" class="detail" hidden></aside>
+      </div>
+    </main>
+  </div>
+
+  <div id="tile-menu" class="tile-menu" role="menu" aria-label="คำสั่งเครื่อง" hidden></div>
+  <dialog id="modal"></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
